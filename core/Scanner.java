@@ -76,10 +76,21 @@ public class Scanner {
                 }
                 break;
 
+            // manejo de espacios
+            case ' ':
+            case '\r':
+            case '\t':
+                // Ignorar espacios en blanco
+                break;
+            case '\n':
+                line++;
+                break;
+
+
             // manejo de errores
             default:
-            Lox.error(line, "Unexpected character.");
-            break;
+                Lox.error(line, "Unexpected character.");
+                break;
         }
     }
 
