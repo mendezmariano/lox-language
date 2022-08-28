@@ -86,7 +86,8 @@ public class Scanner {
                 line++;
                 break;
 
-
+            // literales 
+            case '"': string(); break;
             // manejo de errores
             default:
                 Lox.error(line, "Unexpected character.");
@@ -94,6 +95,24 @@ public class Scanner {
         }
     }
 
+    private void string() {
+        while (peek() != '"' && !isAtEnd()) {
+            if (peek() == '\n') line++;
+            advance();
+        }
+        if (isAtEnd()) {
+            Lox.error(line, "Unterminated string.");
+            return;
+        }
+
+        // Las " que cierran el literal.
+        advance();
+        
+        // sacar las comillas dobles.
+        String value = source.substring(start + 1, current - 1);
+        addToken(STRING, value);
+    }
+    
     // lookahead
     //  no consume el próximo caracter solo
     //  se fija hacia adelante
