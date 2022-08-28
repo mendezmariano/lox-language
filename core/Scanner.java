@@ -64,12 +64,34 @@ public class Scanner {
                 addToken(match('=') ? GREATER_EQUAL : GREATER);
                 break;
 
+            // reconocimientos de tokens mas complejos
+            // manejo de lexemas mas complejos
+            case '/':
+                if (match('/')) {
+                // Es un comentario ir al final de la linea.
+                while (peek() != '\n' && !isAtEnd()) 
+                        advance();
+                } else {
+                    addToken(SLASH);
+                }
+                break;
 
             // manejo de errores
             default:
             Lox.error(line, "Unexpected character.");
             break;
         }
+    }
+
+    // lookahead
+    //  no consume el próximo caracter solo
+    //  se fija hacia adelante
+    //  cuantos menos hay mas rápido es el scanner
+    // la cantidad depende de la gramática 
+     
+    private char peek() {
+        if (isAtEnd()) return '\0';
+        return source.charAt(current);
     }
 
     private boolean match(char expected) {
