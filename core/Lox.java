@@ -50,7 +50,7 @@ public class Lox {
         // For now, just print the tokens.
         for (Token token : tokens) {
             System.out.println(token);
-           }
+        }
     }
 
     static void error(int line, String message) {

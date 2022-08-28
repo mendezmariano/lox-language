@@ -47,9 +47,9 @@ public class Scanner {
     
     List<Token> scanTokens() {
         while (!isAtEnd()) {
-        // el inicio del proximo lexema .
-        start = current;
-        scanToken();
+            // el inicio del proximo lexema .
+            start = current;
+            scanToken();
         }
         tokens.add(new Token(EOF, "", null, line));
         return tokens;
