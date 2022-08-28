@@ -1,3 +1,5 @@
+package core;
+
 class Token {
     final TokenType type;
     final String lexeme;
