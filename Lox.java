@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Lox {
-    
+    static boolean hadError = false;  // manejo de errores
     public static void main(String[] args) throws Exception {
         if (args.length>1){
             System.out.println("Usage: jlox [script]");
@@ -23,8 +23,8 @@ public class Lox {
     private static void runFile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
-        
-        
+        // indica el error code cuando sale 
+        if (hadError) System.exit(65);
     }
     
     // ejecuta el interprete  --> REPL
@@ -37,7 +37,7 @@ public class Lox {
             String line = reader.readLine();
             if (line == null) break;
             run(line);
-           
+            hadError = false; // se inicializa el handler de errores 
         }
     }
 
@@ -50,7 +50,15 @@ public class Lox {
             System.out.println(token);
            }
     }
-    
 
+    static void error(int line, String message) {
+        report(line, "", message);
+    
+    }
+
+    private static void report(int line, String where,String message) {
+        System.err.println("[line " + line + "] Error" + where + ": " + message);
+        hadError = true;
+    }
 
 }
