@@ -90,9 +90,26 @@ public class Scanner {
             case '"': string(); break;
             // manejo de errores
             default:
-                Lox.error(line, "Unexpected character.");
+                if (isDigit(c)) {
+                    number();
+                } else {
+                    Lox.error(line, "Unexpected character.");
+                }
                 break;
         }
+    }
+
+    private void number() {
+        while (isDigit(peek())) advance();
+        // busca y avanza hasta el .
+        if (peek() == '.' && isDigit(peekNext())) {
+        // Consume el "."
+        advance();
+        // sigue con la parte decimal
+        while (isDigit(peek())) advance();
+        }
+    addToken(NUMBER,
+    Double.parseDouble(source.substring(start, current)));
     }
 
     private void string() {
@@ -124,6 +141,12 @@ public class Scanner {
         return source.charAt(current);
     }
 
+    // lookahead el proximo del corriente
+    private char peekNext() {
+        if (current + 1 >= source.length()) return '\0';
+        return source.charAt(current + 1);
+    }
+
     private boolean match(char expected) {
         if (isAtEnd()) return false;
         if (source.charAt(current) != expected) return false;
@@ -150,5 +173,10 @@ public class Scanner {
         return current >=source.length();
     }
 
+    // función utilidad que verifica 
+    // que un caracter sea un dígito
+    private boolean isDigit(char c) {
+        return c >= '0' && c <= '9';
+    }
 
 }
