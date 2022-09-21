@@ -64,6 +64,9 @@ public class AstNodesCreator{
         String fieldList)throws IOException {
 
         PrintWriter writer = new PrintWriter(path, "UTF-8");
+        writer.println("import core.Token;");
+        writer.println();
+        
         writer.println("static class " + className + " extends " +
     baseName + " {");
         // Constructor.
