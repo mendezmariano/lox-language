@@ -31,6 +31,20 @@ class Parser{
         return expr;
     }
 
+    //otra regla
+    //comparison → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+
+    private Expr comparison(){
+        Expr expr = term();
+        while (match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
+            Token operator = previous();
+            Expr right = term();
+            expr = new Binary(expr, operator, right);
+        }
+        return expr;
+    }
+
+
     /* 
         Parser Infrastrucuture
         ******************************************************
