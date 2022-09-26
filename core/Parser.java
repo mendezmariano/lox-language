@@ -4,6 +4,9 @@ import java.util.List;
 import static core.TokenType.*;
 import core.ast.Expr;
 import core.ast.Binary;
+import core.ast.Grouping;
+import core.ast.Unary;
+import core.ast.Literal;
 
 class Parser{
 
@@ -43,7 +46,58 @@ class Parser{
         }
         return expr;
     }
+    // term→ factor ( ( "-" | "+" ) factor )* ;
+    private Expr term() {
+        Expr expr = factor();
+        while (match(MINUS, PLUS)) {
+            Token operator = previous();
+            Expr right = factor();
+            expr = new Binary(expr, operator, right);
+        }
+        return expr;
+    }
 
+    // factor→ unary ( ( "/" | "*" ) unary )* ;
+    private Expr factor() {
+        Expr expr = unary();
+        while (match(SLASH, STAR)) {
+            Token operator = previous();
+            Expr right = unary();
+            expr = new Binary(expr, operator, right);
+        }
+        return expr;
+    }
+
+
+
+    //unary→ ( "!" | "-" ) unary;
+    private Expr unary() {
+        if (match(BANG, MINUS)) {
+            Token operator = previous();
+            Expr right = unary();
+            return new Unary(operator, right);
+        }
+        return primary();
+    }
+    //primary→ NUMBER | STRING | "true" | "false" | "nil"
+    //       | primary ;
+    //       | "(" expression ")" ;
+
+    private Expr primary() {
+      
+        if (match(FALSE)) return new Literal(false);
+        if (match(TRUE)) return new Literal(true);
+        if (match(NIL)) return new Literal(null);
+        
+        if (match(NUMBER, STRING)) {
+            return new Literal(previous().literal);
+        }
+        if (match(LEFT_PAREN)) {
+            Expr expr = expression();
+            consume(RIGHT_PAREN, "Expect ')' after expression.");
+            return new Grouping(expr);
+        }
+    }
 
     /* 
         Parser Infrastrucuture
@@ -65,6 +119,12 @@ class Parser{
         }
         return false;
     }
+
+    private Token consume(TokenType type, String message) {
+        if (check(type)) return advance();
+        throw error(peek(), message);
+    }
+
 
     /* check():El método check() devuelve verdadero si el token actual es del tipo dado.
     A diferencia de match(), nunca consume el token, solo lo mira.

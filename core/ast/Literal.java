@@ -1,7 +1,7 @@
 package core.ast;
 
 public class Literal extends Expr {
-    Literal(Object value) {
+    public Literal(Object value) {
         this.value = value;
     }
 

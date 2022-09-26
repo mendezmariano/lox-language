@@ -1,7 +1,7 @@
 package core.ast;
 
 public class Grouping extends Expr {
-    Grouping(Expr expression) {
+    public Grouping(Expr expression) {
         this.expression = expression;
     }
 
