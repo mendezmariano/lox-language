@@ -10,11 +10,26 @@ import core.ast.Literal;
 
 class Parser{
 
+    private static class ParseError extends RuntimeException {}
+    /*
+     * Esta es una clase centinela simple que usamos para desenredar el analizador. 
+     * El método error() devuelve el error en lugar de lanzarlo porque queremos dejar 
+     * que el método de llamada dentro del analizador decida si se desenreda (unwind) o no.
+     */
     private final List<Token> tokens;
     private int current=0;
 
     Parser(List<Token> tokens){
         this.tokens= tokens;
+    }
+
+    // determina el inicio desde donde se comienza a parsear
+    Expr parse() {
+        try {
+            return expression();
+        } catch (ParseError error) {
+            return null;
+        }
     }
 
     // primera regla de la gramatica 
@@ -97,6 +112,8 @@ class Parser{
             consume(RIGHT_PAREN, "Expect ')' after expression.");
             return new Grouping(expr);
         }
+        
+        throw error(peek(), "Expect expression.");
     }
 
     /* 
@@ -163,5 +180,39 @@ class Parser{
     private Token previous() {
         return tokens.get(current - 1);
     }
+
+    /* Parser errors */
+    private ParseError error(Token token, String message) {
+        Lox.error(token, message);
+        return new ParseError();
+    }
+
+
+    /* Descarta tokens hasta que cree que ha encontrado un límite de declaración. 
+    Después de detectar un ParseError, lo llamaremos y, con suerte, volveremos a estar sincronizados.
+    Cuando funciona bien, hemos descartado tokens que probablemente habrían 
+    causado errores en cascada de todos modos, y ahora podemos analizar el resto del archivo
+     a partir de la siguiente declaración. */
+
+
+    private void synchronize() {
+        advance();
+        while (!isAtEnd()) {
+            if (previous().type == SEMICOLON) return;
+            switch (peek().type) {
+                case CLASS:
+                case FUN:
+                case VAR:
+                case FOR:
+                case IF:
+                case WHILE:
+                case PRINT:
+                case RETURN:
+                return;
+            }
+            advance();
+        }
+    }
+
 
 }

@@ -13,7 +13,7 @@ public class Scanner {
     private final String source;                                    // stream de caracteres
     private final List<Token> tokens= new ArrayList<>();            // stream de tokens
     private int start=0;        // inicio de la linea
-    private int current=0;      // posicion caracter actual
+    private int current=0;      // posición caracter actual
     private int line=1;         // linea escaneada
 
     private static final Map<String, TokenType> keywords;
