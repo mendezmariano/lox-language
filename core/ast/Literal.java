@@ -6,9 +6,9 @@ public class Literal extends Expr {
     }
 
     @Override
-    <T> T accept(Visitor<T> visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visitLiteralExpr(this);
     }
 
-    final Object value;
+    public final Object value;
 }

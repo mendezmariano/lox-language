@@ -9,10 +9,10 @@ public class Unary extends Expr {
     }
 
     @Override
-    <T> T accept(Visitor<T> visitor) {
+    public <T> T accept(Visitor<T> visitor) {
         return visitor.visitUnaryExpr(this);
     }
 
-    final Token operator;
-    final Expr right;
+    public final Token operator;
+    public final Expr right;
 }

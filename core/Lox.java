@@ -52,12 +52,9 @@ public class Lox {
         Expr expression = parser.parse();
         // Stop if there was a syntax error.
         if (hadError) return;
-               
-        // For now, just print the tokens.
-        if (expression!=null) 
-            for (Token token : tokens) {
-                System.out.println(token);
-            }
+
+        System.out.println(new AstPrinter().print(expression));
+
     }
 
     static void error(int line, String message) {
