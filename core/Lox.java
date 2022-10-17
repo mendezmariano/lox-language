@@ -11,6 +11,10 @@ import core.ast.Expr;
 
 public class Lox {
     static boolean hadError = false;  // manejo de errores
+    static boolean hadRuntimeError = false; // manejo de Runtime errors
+
+
+
     public static void main(String[] args) throws Exception {
         if (args.length>1){
             System.out.println("Usage: jlox [script]");
@@ -28,6 +32,7 @@ public class Lox {
         run(new String(bytes, Charset.defaultCharset()));
         // indica el error code cuando sale 
         if (hadError) System.exit(65);
+        if (hadRuntimeError) System.exit(70);
     }
     
     // ejecuta el interprete  --> REPL
@@ -60,6 +65,13 @@ public class Lox {
     static void error(int line, String message) {
         report(line, "", message);
     
+    }
+
+    static void runtimeError(RuntimeError error) {
+        
+        System.err.println(error.getMessage() +
+        "\n[line " + error.token.line + "]");
+        hadRuntimeError = true;
     }
 
     private static void report(int line, String where,String message) {
