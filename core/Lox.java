@@ -10,6 +10,7 @@ import java.util.List;
 import core.ast.Expr;
 
 public class Lox {
+    private static final Interpreter interpreter = new Interpreter();
     static boolean hadError = false;  // manejo de errores
     static boolean hadRuntimeError = false; // manejo de Runtime errors
 
@@ -57,8 +58,8 @@ public class Lox {
         Expr expression = parser.parse();
         // Stop if there was a syntax error.
         if (hadError) return;
-
-        System.out.println(new AstPrinter().print(expression));
+        interpreter.interpret(expression);
+        //System.out.println(new AstPrinter().print(expression));
 
     }
 
