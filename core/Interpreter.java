@@ -26,12 +26,19 @@ public class Interpreter implements Visitor<Object> {
         switch (expr.operator.type) {
             case MINUS:
                 return -(double)right;
+        
+            case BANG:
+            return !isTruthy(right);
         }
-        // Unreachable.
+            // Unreachable.
         return null;
     }
 
-
+    private boolean isTruthy(Object object) {
+        if (object == null) return false;
+        if (object instanceof Boolean) return (boolean)object;
+        return true;
+        }
 
     private Object evaluate(Expr expr) {
         return expr.accept(this);
