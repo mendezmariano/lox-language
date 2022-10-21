@@ -6,6 +6,11 @@ import java.util.Arrays;
 import java.util.List;
 
 
+// TODO: mejorar los atributos de java en cada clase
+// TODO: agregar setters y getters
+// TODo: modificar la creacion del visitor para que no pise
+
+
 public class AstNodesCreator{
 
   // Formato para generar las clases que seran los
@@ -14,7 +19,14 @@ public class AstNodesCreator{
     "Binary: Expr left, Token operator, Expr right",
     "Grouping : Expr expression",
     "Literal: Object value",
-    "Unary: Token operator, Expr right"
+    "Unary: Token operator, Expr right",
+    "Variable : Token name"
+    );
+
+    public static List<String> AstStmtNodesDefinitionList =Arrays.asList(
+            "Expression : Expr expression",
+            "Print: Expr expression",
+            "Var: Token name, Expr initializer"
     );
 
     public static void main(String[] args) throws IOException {
@@ -24,6 +36,7 @@ public class AstNodesCreator{
         }
         String outputDir = args[0];
         defineAst(outputDir, "Expr",AstNodesDefinitionlist);
+        defineAst(outputDir, "Stmt", AstStmtNodesDefinitionList);
     }
 
 
@@ -38,10 +51,10 @@ public class AstNodesCreator{
         
         writer.println("import java.util.List;");
         writer.println();
-        writer.println("abstract class " + baseName + " {");
+        writer.println("public abstract class " + baseName + " {");
         writer.println();
         // método accept de la clase base
-        writer.println("abstract <R> R accept(Visitor<R> visitor);");
+        writer.println("public abstract <R> R accept(Visitor<R> visitor);");
         writer.println("}");
         writer.close();
         
@@ -67,7 +80,7 @@ public class AstNodesCreator{
         writer.println("import core.Token;");
         writer.println();
         
-        writer.println("static class " + className + " extends " +
+        writer.println("public static class " + className + " extends " +
     baseName + " {");
         // Constructor.
         writer.println("    " + className + "(" + fieldList + ") {");
@@ -82,14 +95,14 @@ public class AstNodesCreator{
         // Patron Visitor 
         writer.println();
         writer.println("    @Override");
-        writer.println("    <T> T accept(Visitor<T> visitor) {");
+        writer.println("    public <T> T accept(Visitor<T> visitor) {");
         writer.println("        return visitor.visit" +className + baseName + "(this);");
         writer.println("    }");
 
         // Atributos.
         writer.println();
         for (String field : fields) {
-            writer.println("    final " + field + ";");
+            writer.println("    public final " + field + ";");
         }
         writer.println("}");
         writer.close();
@@ -101,7 +114,7 @@ public class AstNodesCreator{
         List<String> types)throws IOException {
 
         PrintWriter writer = new PrintWriter(path, "UTF-8");
-        writer.println("interface Visitor<T> {");
+        writer.println("public interface Visitor<T> {");
         for (String type : types) {
             String typeName = type.split(":")[0].trim();
             writer.println("    T visit" + typeName + baseName + "(" +

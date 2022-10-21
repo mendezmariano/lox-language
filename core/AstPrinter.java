@@ -29,7 +29,7 @@ public class AstPrinter implements Visitor<String> {
     return parenthesize( expr.right);
     }
 
-
+     // todo: check el operador
     private String parenthesize( Expr... exprs) {
         StringBuilder builder = new StringBuilder();
         builder.append("(");
