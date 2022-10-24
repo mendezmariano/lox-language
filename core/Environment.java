@@ -16,6 +16,17 @@ public class Environment {
         throw new RuntimeError(name,"Undefined variable '" + name.lexeme + "'.");
     }
 
+    // asignacion
+    void assign(Token name, Object value) {
+        if (values.containsKey(name.lexeme)) {
+            values.put(name.lexeme, value);
+            return;
+        }
+        throw new RuntimeError(name,"Undefined variable '" + name.lexeme + "'.");
+    }
+
+
+
     // operacion que define un binding 
     // entre variable y valor
     

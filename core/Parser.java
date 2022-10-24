@@ -13,6 +13,7 @@ import core.ast.Print;
 import core.ast.Expression;
 import core.ast.Var;
 import core.ast.Variable;
+import core.ast.Assign;
 
 public class Parser{
 
@@ -38,9 +39,9 @@ public class Parser{
         return statements;
     }
 
-    
+    // expression→ assignment ;
     private Expr expression(){
-        return equality();
+        return assignment();
     }
 
 
@@ -50,6 +51,24 @@ public class Parser{
         if (match(PRINT)) return printStatement();
         
         return expressionStatement();
+    }
+
+
+    // assignment→ IDENTIFIER "=" assignment
+    // fijarse que el r-value no es una expresion!
+    private Expr assignment() {
+        Expr expr = equality();
+        
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment();
+            if (expr instanceof Variable) {
+                Token name = ((Variable)expr).name;
+                return new Assign(name, value);
+            }
+        error(equals, "Invalid assignment target.");
+        }
+        return expr;
     }
 
     // Print Statement

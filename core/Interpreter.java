@@ -100,6 +100,9 @@ public class Interpreter implements Visitor<Object> ,
         return null;
     }
 
+    // Se evalua la expresion que recibe el print
+    // posteriormente se imprime
+    
     @Override
     public Void visitPrintStmt(Print stmt) {
         Object value = evaluate(stmt.expression);
@@ -107,6 +110,10 @@ public class Interpreter implements Visitor<Object> ,
         return null;
     }
 
+
+    // Al visitar un var stmt se define la variable
+    // si fue inicializada se la inicializa sino 
+    // su valor es null
     @Override
     public Void visitVarStmt(Var stmt) {
         Object value = null;
@@ -115,6 +122,16 @@ public class Interpreter implements Visitor<Object> ,
         }
         environment.define(stmt.name.lexeme, value);
         return null;
+    }
+
+    // Cuando se visita una Asignacion se evalua 
+    // ,posteriormete se agrega al ambiente
+    // y se devuelve el valor evaluado 
+    @Override
+    public Object visitAssignExpr(Assign expr) {
+        Object value = evaluate(expr.value);
+        environment.assign(expr.name, value);
+        return value;
     }
 
     // evaluar expresiones binarias
