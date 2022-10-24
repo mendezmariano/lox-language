@@ -3,7 +3,7 @@ package core.ast;
 import core.Token;
 
 public class Variable extends Expr {
-    Variable(Token name) {
+    public Variable(Token name) {
         this.name = name;
     }
 

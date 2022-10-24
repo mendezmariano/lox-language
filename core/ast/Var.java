@@ -3,7 +3,7 @@ package core.ast;
 import core.Token;
 
 public class Var extends Stmt {
-    Var(Token name, Expr initializer) {
+    public Var(Token name, Expr initializer) {
         this.name = name;
         this.initializer = initializer;
     }

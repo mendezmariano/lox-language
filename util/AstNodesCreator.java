@@ -16,6 +16,7 @@ public class AstNodesCreator{
   // Formato para generar las clases que seran los
   // nodos del AST
   public static List<String> AstNodesDefinitionlist = Arrays.asList(
+    "Assign: Token name, Expr value",  
     "Binary: Expr left, Token operator, Expr right",
     "Grouping : Expr expression",
     "Literal: Object value",
@@ -36,7 +37,7 @@ public class AstNodesCreator{
         }
         String outputDir = args[0];
         defineAst(outputDir, "Expr",AstNodesDefinitionlist);
-        defineAst(outputDir, "Stmt", AstStmtNodesDefinitionList);
+        //defineAst(outputDir, "Stmt", AstStmtNodesDefinitionList);
     }
 
 
