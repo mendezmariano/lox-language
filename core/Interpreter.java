@@ -1,18 +1,25 @@
 package core;
 
+import java.util.List;
 import core.ast.*;
 import core.TokenType;
 
-public class Interpreter implements Visitor<Object> {
+public class Interpreter implements Visitor<Object> ,
+                                    StmtVisitor<Void>{
 
     // toma el AST y lo evalua
-    void interpret(Expr expression) {
+    public void interpret(List<Stmt> statements) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
+            for (Stmt statement : statements) {
+            execute(statement);
+        }
         } catch (RuntimeError error) {
             Lox.runtimeError(error);
         }
+    }
+
+    private void execute(Stmt stmt) {
+        stmt.accept(this);    
     }
 
     // Convierte un  valor en un string
@@ -74,6 +81,20 @@ public class Interpreter implements Visitor<Object> {
 
     private Object evaluate(Expr expr) {
         return expr.accept(this);
+    }
+
+    // evaluar expressions stmt
+    @Override
+    public Void visitExpressionStmt(Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
     }
 
     // evaluar expresiones binarias

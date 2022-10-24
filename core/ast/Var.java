@@ -9,7 +9,7 @@ public class Var extends Stmt {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
+    public <T> T accept(StmtVisitor<T> visitor) {
         return visitor.visitVarStmt(this);
     }
 

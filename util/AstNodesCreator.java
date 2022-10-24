@@ -83,7 +83,7 @@ public class AstNodesCreator{
         writer.println("public static class " + className + " extends " +
     baseName + " {");
         // Constructor.
-        writer.println("    " + className + "(" + fieldList + ") {");
+        writer.println("    public " + className + "(" + fieldList + ") {");
         
         // Store parameters in fields.
         String[] fields = fieldList.split(", ");

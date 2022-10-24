@@ -2,12 +2,13 @@ package core.ast;
 
 
 public class Print extends Stmt {
-    Print(Expr expression) {
+    
+    public Print(Expr expression) {
         this.expression = expression;
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
+    public <T> T accept(StmtVisitor<T> visitor) {
         return visitor.visitPrintStmt(this);
     }
 

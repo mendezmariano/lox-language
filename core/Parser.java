@@ -1,5 +1,6 @@
 package core;
 
+import java.util.ArrayList;
 import java.util.List;
 import static core.TokenType.*;
 import core.ast.Expr;
@@ -7,8 +8,11 @@ import core.ast.Binary;
 import core.ast.Grouping;
 import core.ast.Unary;
 import core.ast.Literal;
+import core.ast.Stmt;
+import core.ast.Print;
+import core.ast.Expression;
 
-class Parser{
+public class Parser{
 
     private static class ParseError extends RuntimeException {}
     /*
@@ -24,18 +28,46 @@ class Parser{
     }
 
     // determina el inicio desde donde se comienza a parsear
-    Expr parse() {
-        try {
-            return expression();
-        } catch (ParseError error) {
-            return null;
+    public List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(statement());
         }
+        return statements;
     }
 
     // primera regla de la gramatica 
     private Expr expression(){
         return equality();
     }
+
+
+    // Parseo de los Statements
+    private Stmt statement() {
+        if (match(PRINT)) return printStatement();
+        
+        return expressionStatement();
+    }
+
+    // Print Statement
+    private Stmt printStatement() {
+ 
+        Expr value = expression();
+        consume(SEMICOLON, "Expect ';' after value.");
+        return new Print(value);
+    }
+
+    // maneja las expression statements
+    private Stmt expressionStatement() {
+        
+        Expr expr = expression();
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Expression(expr);
+    }
+
+
+
+
 
     // equality → comparison ( ( "!=" | "==" ) comparison )* ;
     private Expr equality() {

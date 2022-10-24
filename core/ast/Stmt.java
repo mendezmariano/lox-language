@@ -3,5 +3,5 @@ package core.ast;
 
 public abstract class Stmt {
 
-public abstract <R> R accept(Visitor<R> visitor);
+public abstract <R> R accept(StmtVisitor<R> visitor);
 }

@@ -3,12 +3,10 @@ package core.ast;
 
 
 public interface Visitor<T> {
-T visitBinaryExpr(Binary expr);
-T visitGroupingExpr(Grouping expr);
-T visitLiteralExpr(Literal expr);
-T visitUnaryExpr(Unary expr);
-T visitVariableExpr(Variable expr);
-T visitExpressionStmt(Expression stmt);
-T visitPrintStmt(Print stmt);
-T visitVarStmt(Var stmt);
+public T visitBinaryExpr(Binary expr);
+public T visitGroupingExpr(Grouping expr);
+public T visitLiteralExpr(Literal expr);
+public T visitUnaryExpr(Unary expr);
+//public T visitVariableExpr(Variable expr);
+public T visitExpressionStmt(Expression stmt);
 }
