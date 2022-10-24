@@ -11,6 +11,8 @@ import core.ast.Literal;
 import core.ast.Stmt;
 import core.ast.Print;
 import core.ast.Expression;
+import core.ast.Var;
+import core.ast.Variable;
 
 public class Parser{
 
@@ -31,18 +33,19 @@ public class Parser{
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
         while (!isAtEnd()) {
-            statements.add(statement());
+            statements.add(declaration());
         }
         return statements;
     }
 
-    // primera regla de la gramatica 
+    
     private Expr expression(){
         return equality();
     }
 
 
     // Parseo de los Statements
+    // statement→ exprStmt| printStmt ;
     private Stmt statement() {
         if (match(PRINT)) return printStatement();
         
@@ -50,6 +53,8 @@ public class Parser{
     }
 
     // Print Statement
+    //printStmt→ "print" expression ";" ;
+
     private Stmt printStatement() {
  
         Expr value = expression();
@@ -57,7 +62,21 @@ public class Parser{
         return new Print(value);
     }
 
+    // varDecl→ "var" IDENTIFIER ( "=" expression )? ";" ;
+
+    private Stmt varDeclaration() {
+        Token name = consume(IDENTIFIER, "Expect variable name.");
+        
+        Expr initializer = null;
+        if (match(EQUAL)) {
+            initializer = expression();
+        }
+        consume(SEMICOLON, "Expect ';' after variable declaration.");
+        return new Var(name, initializer);
+    }
+
     // maneja las expression statements
+    // exprStmt→ expression ";" ;
     private Stmt expressionStatement() {
         
         Expr expr = expression();
@@ -66,7 +85,17 @@ public class Parser{
     }
 
 
-
+    // declaracion stmt
+    //declaration→ varDecl| statement ;
+    private Stmt declaration() {
+        try {
+            if (match(VAR)) return varDeclaration();
+            return statement();
+        } catch (ParseError error) {
+            synchronize();
+            return null;
+        }
+    }
 
 
     // equality → comparison ( ( "!=" | "==" ) comparison )* ;
@@ -139,6 +168,11 @@ public class Parser{
         if (match(NUMBER, STRING)) {
             return new Literal(previous().literal);
         }
+
+        if (match(IDENTIFIER)) {
+            return new Variable(previous());
+        }
+
         if (match(LEFT_PAREN)) {
             Expr expr = expression();
             consume(RIGHT_PAREN, "Expect ')' after expression.");
