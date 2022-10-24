@@ -25,6 +25,7 @@ public class AstNodesCreator{
     );
 
     public static List<String> AstStmtNodesDefinitionList =Arrays.asList(
+            "Block : List<Stmt> statements",
             "Expression : Expr expression",
             "Print: Expr expression",
             "Var: Token name, Expr initializer"
@@ -36,8 +37,8 @@ public class AstNodesCreator{
             System.exit(64);
         }
         String outputDir = args[0];
-        defineAst(outputDir, "Expr",AstNodesDefinitionlist);
-        //defineAst(outputDir, "Stmt", AstStmtNodesDefinitionList);
+        //defineAst(outputDir, "Expr",AstNodesDefinitionlist);
+        defineAst(outputDir, "Stmt", AstStmtNodesDefinitionList);
     }
 
 

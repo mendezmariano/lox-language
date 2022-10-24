@@ -46,10 +46,10 @@ public class Parser{
 
 
     // Parseo de los Statements
-    // statement→ exprStmt| printStmt ;
+    // statement→ exprStmt| printStmt | Block;
     private Stmt statement() {
         if (match(PRINT)) return printStatement();
-        
+        if (match(LEFT_BRACE)) return new Block(block());
         return expressionStatement();
     }
 
@@ -103,7 +103,16 @@ public class Parser{
         return new Expression(expr);
     }
 
-
+    // parsea un bloque 
+    private List<Stmt> block() {
+        List<Stmt> statements = new ArrayList<>();
+        
+        while (!check(RIGHT_BRACE) && !isAtEnd()) {
+            statements.add(declaration());
+        }
+        consume(RIGHT_BRACE, "Expect '}' after block.");
+        return statements;
+    }
     // declaracion stmt
     //declaration→ varDecl| statement ;
     private Stmt declaration() {

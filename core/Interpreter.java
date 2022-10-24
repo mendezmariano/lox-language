@@ -25,6 +25,30 @@ public class Interpreter implements Visitor<Object> ,
         stmt.accept(this);    
     }
 
+    // cuando visita un bloque lo ejecuta
+    @Override
+    public Void visitBlockStmt(Block stmt) {
+        executeBlock(stmt.statements, new Environment(environment));
+    return null;
+    }
+
+    // ejecuta la semantica del bloque
+    // crea un ambito para las variables locales
+    // ejecuta los stmts
+    // devuelve el ambito padre 
+    void executeBlock(List<Stmt> statements, Environment environment) {
+        Environment previous = this.environment;
+        try {
+            this.environment = environment;
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
+        } finally {
+            this.environment = previous;
+        }
+    }
+
+
     // Convierte un  valor en un string
     private String stringify(Object object) {
         
@@ -102,7 +126,7 @@ public class Interpreter implements Visitor<Object> ,
 
     // Se evalua la expresion que recibe el print
     // posteriormente se imprime
-    
+
     @Override
     public Void visitPrintStmt(Print stmt) {
         Object value = evaluate(stmt.expression);
